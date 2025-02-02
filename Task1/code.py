@@ -8,7 +8,7 @@ def image_to_text(img_path):
         text = pytesseract.image_to_string(img)
         return text.strip()
     except Exception as e:
-        raise f"Error: {str(e)}"
+        raise RuntimeError(f"Error: {str(e)}")
 
 if __name__ == "__main__":
     assert(len(sys.argv) == 2)

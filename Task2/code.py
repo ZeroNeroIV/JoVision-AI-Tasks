@@ -28,7 +28,7 @@ def color_to_black(img_path):
 
         return result
     except Exception as e:
-        raise f"Error: {str(e)}"
+        raise RuntimeError(f"Error: {str(e)}")
 
 if __name__ == "__main__":
     assert(len(sys.argv) == 2)
