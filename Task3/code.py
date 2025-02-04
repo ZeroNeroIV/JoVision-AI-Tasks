@@ -1,4 +1,5 @@
 from PIL import Image
+import os
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -8,7 +9,7 @@ data_to_save = []
 
 for i in range(1, 46):
     try:
-        file = f'C:/Users/alame/JoVision-AI-Tasks/Task3/task3Images/{i}.jpg'
+        file = f'{os.curdir}/Task3/task3Images/{i}.jpg'
         img = Image.open(file).convert('L')
         width, height = img.size
         
