@@ -7,14 +7,21 @@ import matplotlib.pyplot as plt
 # Create a list to store all the data for saving to Excel
 data_to_save = []
 
-for i in range(1, 46):
+# Get all `.jpg` files dynamically from the current working directory
+image_directory = f"{os.curdir}/Task3/task3Images/"
+image_files = [f for f in os.listdir(image_directory) if f.endswith('.jpg')]
+image_files.sort(key=lambda x: int(os.path.splitext(x.replace('.jpg', ''))[0]))
+
+# Iterate through each image file
+for file_name in image_files:
     try:
-        file = f'{os.curdir}/Task3/task3Images/{i}.jpg'
+        file = os.path.join(image_directory, file_name)
         img = Image.open(file).convert('L')
         width, height = img.size
         
         right_half = img.crop((width // 2, 0, width, height - 8)).rotate(-90)
         width, height = right_half.size
+        # right_half.save(f'd_{file_name}')
         
         img_np = np.array(right_half)
         min_color_val = np.min(img_np[img_np >= 30]) if np.any(img_np >= 30) else 255
@@ -42,7 +49,7 @@ for i in range(1, 46):
 
         # Save the results to the data_to_save list
         data_to_save.append({
-            "Image": i,
+            "Image": file_name.replace('.jpg', ''),
             "Thumb": finger_pressure["Thumb"],
             "Index": finger_pressure["Index"],
             "Middle": finger_pressure["Middle"],
@@ -50,9 +57,9 @@ for i in range(1, 46):
             "Pinky": finger_pressure["Pinky"]
         })
 
-        print(f'{file}: {finger_pressure}\n')
+        print(f'{file_name}: {finger_pressure}\n')
 
-        # Visualize the cropped finger images stored in 'fingers' dictionary
+        ## Visualize the cropped finger images stored in 'fingers' dictionary
         # fig, axes = plt.subplots(1, len(fingers), figsize=(15, 5))
         # for i, (finger, cropped_img) in enumerate(fingers.items()):
         #     axes[i].imshow(cropped_img, cmap="gray")  # Display grayscale image
@@ -63,7 +70,7 @@ for i in range(1, 46):
         # plt.show()
 
     except Exception as e:
-        raise RuntimeError(f'Error: {e}')
+        raise RuntimeError(f'Error processing {file_name}: {e}')
     finally:
         right_half.close()
         img.close()
@@ -72,6 +79,7 @@ for i in range(1, 46):
 df = pd.DataFrame(data_to_save)
 
 # Save the DataFrame to an Excel file
-df.to_excel("finger_pressures.xlsx", index=False)
+output_file = f"{os.curdir}/Task3/finger_pressures.xlsx"
+df.to_excel(output_file, index=False)
 
-print("Data has been saved to 'finger_pressures.xlsx'.")
+print(f"Data has been saved to '{output_file}'.")
