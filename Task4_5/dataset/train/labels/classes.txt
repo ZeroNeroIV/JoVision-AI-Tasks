@@ -1,0 +1,6 @@
+Pawn
+King
+Rock
+Bishop
+Queen
+Knight
